@@ -2,15 +2,18 @@ import React from "react";
 import Container from "react-bootstrap/Container"
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+
 
 export default class Results extends React.Component {
   render() {
     return (
-      <Container>
-            <Card style={{ width: '18rem' }}>
+      <Container fluid className="mt-5">
+        <Row>
+          <Col>
+            <Card style={{ width: '18rem' }} className="m-auto align-self-center">
               <Card.Img variant="top" src={this.props.map} />
-
-
               <Card.Body>
                 <Card.Title>{this.props.location.display_name}</Card.Title>
                 <Card.Text>
@@ -22,8 +25,9 @@ export default class Results extends React.Component {
                 <ListGroup.Item>Lon:{this.props.location.lon}</ListGroup.Item>
               </ListGroup>
             </Card>
+          </Col>
+        </Row>
       </Container>
-
     )
   }
 }
