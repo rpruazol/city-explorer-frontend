@@ -4,6 +4,8 @@ import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import Weather from "./Weather"
+
 
 
 export default class Results extends React.Component {
@@ -16,14 +18,16 @@ export default class Results extends React.Component {
               <Card.Img variant="top" src={this.props.map} />
               <Card.Body>
                 <Card.Title>{this.props.location.display_name}</Card.Title>
-                <Card.Text>
-                  Lorum ipsum
-                </Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
-                <ListGroup.Item>Lat:{this.props.location.lat}</ListGroup.Item>
-                <ListGroup.Item>Lon:{this.props.location.lon}</ListGroup.Item>
+              <ListGroup.Item className="b" variant="info">GPS Coordinates</ListGroup.Item>
+                <ListGroup.Item>Lat: {this.props.location.lat}</ListGroup.Item>
+                <ListGroup.Item>Lon: {this.props.location.lon}</ListGroup.Item>
               </ListGroup>
+                  <Weather
+                    forecastArray={this.props.weather}
+                    error={this.props.error}
+                  />
             </Card>
           </Col>
         </Row>

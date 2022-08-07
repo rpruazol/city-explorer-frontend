@@ -5,7 +5,6 @@ import SearchForm from './SearchForm';
 import Results from './Results';
 import axios from 'axios';
 
-
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -13,7 +12,8 @@ export default class App extends React.Component {
       city: '',
       locationObj: null,
       map: null,
-      error: ''
+      error: '',
+      weather: ''
     }
   }
   saveCity = (value) => {
@@ -23,6 +23,7 @@ export default class App extends React.Component {
 
   queryCity = async (e, city) => {
     e.preventDefault();
+    this.setState({})
     try {
       const response = await axios({
         method: 'get',
@@ -38,20 +39,36 @@ export default class App extends React.Component {
     }
   }
 
-  queryMap = async () => {
+  getWeather = async () => {
+    const URL = `${process.env.REACT_APP_SERVER_URL}/weather`
+    const params = {
+      'lat': this.state.locationObj.lat,
+      'lon': this.state.locationObj.lon,
+      'searchQuery': this.state.city
+    }
+    this.setState({ weather: '' })
+    try {
+      const forecastResults = await axios.get(`${URL}/?lat=${params.lat}&lon=${params.lon}&searchQuery=${params.searchQuery}`);
   
-  const mapResponse = await axios({
-    method: 'get',
-    url: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ}&center=${this.state.locationObj.lat},${this.state.locationObj.lon}&zoom=18`,
-    responseType: 'blob'
-  })
-  let reader = new window.FileReader();
-  reader.readAsDataURL(mapResponse.data)
-  reader.onload = () => {
-    console.log(reader.result)
-    this.setState({ map: reader.result })
+      this.setState({ weather: forecastResults })
+    } catch(e) {
+      this.setState({error: e.message})
+    }
   }
-}
+
+  queryMap = async () => {
+
+    const mapResponse = await axios({
+      method: 'get',
+      url: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ}&center=${this.state.locationObj.lat},${this.state.locationObj.lon}&zoom=18`,
+      responseType: 'blob'
+    })
+    let reader = new window.FileReader();
+    reader.readAsDataURL(mapResponse.data)
+    reader.onload = () => {
+      this.setState({ map: reader.result }, () => this.getWeather())
+    }
+  }
 
   render() {
 
@@ -62,12 +79,17 @@ export default class App extends React.Component {
           queryCity={this.queryCity}
           city={this.state.city}
         />
+
         {(this.state.locationObj) ?
-          <Results
-            location={this.state.locationObj}
-            map={this.state.map}
-          />
-          : <h1>{this.state.error}</h1>
+          <>
+            <Results
+              location={this.state.locationObj}
+              map={this.state.map}
+              weather={this.state.weather}
+              error={this.state.error}
+            />
+          </>
+          :<></>
         }
       </div>
     )
