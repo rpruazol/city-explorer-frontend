@@ -89,7 +89,7 @@ export default class App extends React.Component {
               error={this.state.error}
             />
           </>
-          :<></>
+          :<>{this.state.error}</>
         }
       </div>
     )
