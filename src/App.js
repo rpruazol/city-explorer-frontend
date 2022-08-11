@@ -4,6 +4,9 @@ import React from 'react';
 import SearchForm from './SearchForm';
 import Results from './Results';
 import axios from 'axios';
+import Card from 'react-bootstrap/Card'
+import Movie from './Movie';
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,7 +16,8 @@ export default class App extends React.Component {
       locationObj: null,
       map: null,
       error: '',
-      weather: ''
+      weather: '',
+      movies: ''
     }
   }
   saveCity = (value) => {
@@ -21,9 +25,12 @@ export default class App extends React.Component {
     this.setState({ city: value })
   }
 
+  componentDidMount() {
+    this.setState({ error: '' });
+  }
+
   queryCity = async (e, city) => {
     e.preventDefault();
-    this.setState({})
     try {
       const response = await axios({
         method: 'get',
@@ -32,10 +39,9 @@ export default class App extends React.Component {
       })
       this.setState({ locationObj: response.data[0] }, () => this.queryMap())
     } catch (e) {
+      console.log('city error', e)
       this.setState({ locationObj: null })
-      this.setState({ error: e.message })
-    } finally {
-      console.log('something went wrong.')
+      this.setState({ error: e.response.status })
     }
   }
 
@@ -49,12 +55,31 @@ export default class App extends React.Component {
     this.setState({ weather: '' })
     try {
       const forecastResults = await axios.get(`${URL}/?lat=${params.lat}&lon=${params.lon}&searchQuery=${params.searchQuery}`);
-  
-      this.setState({ weather: forecastResults })
-    } catch(e) {
-      this.setState({error: e.message})
+      console.log(forecastResults)
+      this.setState({ weather: forecastResults }, () => this.getMovies())
+    } catch (e) {
+      console.log('weather error', e)
+      e.message === "Network Error" ? this.setState({ error: 502, weather: 502 }) : this.setState({ error: e.message })
     }
   }
+
+  getMovies = async () => {
+    const URL = `${process.env.REACT_APP_SERVER_URL}/movies`
+    const params = {
+      'searchQuery': this.state.city
+    }
+    this.setState({ movies: '' })
+    try {
+      const movieResults = await axios.get(`${URL}/?searchQuery=${params.searchQuery}`)
+      console.log(movieResults);
+      this.setState({ movies: movieResults }, () => console.log(this.state.movies))
+    } catch (e) {
+      console.log('error in movies', e)
+    }
+  }
+
+
+
 
   queryMap = async () => {
 
@@ -71,7 +96,6 @@ export default class App extends React.Component {
   }
 
   render() {
-
     return (
       <div className="App">
         <SearchForm
@@ -80,16 +104,22 @@ export default class App extends React.Component {
           city={this.state.city}
         />
 
-        {(this.state.locationObj) ?
+        {(this.state.locationObj) &&
           <>
             <Results
               location={this.state.locationObj}
               map={this.state.map}
               weather={this.state.weather}
               error={this.state.error}
+              movies={this.state.movies}
             />
           </>
-          :<>{this.state.error}</>
+        }
+
+        {(this.state.error && this.state.weather === '') &&
+          <Card style={{ width: '18rem' }} className="m-auto align-self-center mt-5">
+            <Card.Img variant="top" src={`https://http.cat/${this.state.error}`} />
+          </Card>
         }
       </div>
     )

@@ -5,6 +5,8 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Weather from "./Weather"
+import Movie from "./Movie"
+import CardGroup from "react-bootstrap/CardGroup"
 
 
 
@@ -24,10 +26,17 @@ export default class Results extends React.Component {
                 <ListGroup.Item>Lat: {this.props.location.lat}</ListGroup.Item>
                 <ListGroup.Item>Lon: {this.props.location.lon}</ListGroup.Item>
               </ListGroup>
+            </Card>
+            <Card className="mt-5">
                   <Weather
                     forecastArray={this.props.weather}
                     error={this.props.error}
                   />
+            </Card>
+            <Card style={{ width: '18rem' }} className="mt-5 m-auto align-self-center">
+              <Movie
+              movieArray={this.props.movies}
+              />
             </Card>
           </Col>
         </Row>
