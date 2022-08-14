@@ -13,8 +13,8 @@ export default class Weather extends React.Component {
         <ListGroup horizontal className="list-group-flush">
 
 
-          {this.props.forecastArray.data ?
-            this.props.forecastArray.data.map(obj => {
+          {this.props.weather.forecastArray ?
+            this.props.weather.forecastArray.map(obj => {
               return (
                 <>
                 <ListGroup>

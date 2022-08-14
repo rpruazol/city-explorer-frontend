@@ -56,7 +56,7 @@ export default class App extends React.Component {
     try {
       const forecastResults = await axios.get(`${URL}/?lat=${params.lat}&lon=${params.lon}&searchQuery=${params.searchQuery}`);
       console.log(forecastResults)
-      this.setState({ weather: forecastResults }, () => this.getMovies())
+      this.setState({ weather: forecastResults.data }, () => this.state)
     } catch (e) {
       console.log('weather error', e)
       e.message === "Network Error" ? this.setState({ error: 502, weather: 502 }) : this.setState({ error: e.message })

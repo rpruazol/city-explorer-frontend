@@ -12,6 +12,7 @@ import Accordion from 'react-bootstrap/Accordion';
 
 export default class Results extends React.Component {
   render() {
+    console.log(this.props)
     return (
       <Container fluid className="mt-5">
         <Row>
@@ -29,7 +30,7 @@ export default class Results extends React.Component {
             </Card>
             <Card className="mt-5">
               <Weather
-                forecastArray={this.props.weather}
+                weather={this.props.weather}
                 error={this.props.error}
               />
             </Card>
