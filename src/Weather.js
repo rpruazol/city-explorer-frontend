@@ -1,10 +1,11 @@
 import React from "react";
 import ListGroup from "react-bootstrap/ListGroup"
 import Card from 'react-bootstrap/Card'
+import WeatherDay from './WeatherDay'
 
 export default class Weather extends React.Component {
 
-
+// Within your Weather component, create a nested component, `WeatherDay`, to render a single day's forecast. Map over the result to convert the raw response data into an array of these components.
 
   render() {
     return (
@@ -16,12 +17,9 @@ export default class Weather extends React.Component {
           {this.props.weather.forecastArray ?
             this.props.weather.forecastArray.map(obj => {
               return (
-                <>
-                <ListGroup>
-                  <ListGroup.Item>{obj.date}</ListGroup.Item>
-                  <ListGroup.Item>{obj.description} </ListGroup.Item>
-                </ListGroup>
-                </>
+                <WeatherDay
+                weather={obj}
+                 />
 
               )
             })
