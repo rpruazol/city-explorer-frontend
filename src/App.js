@@ -17,11 +17,10 @@ export default class App extends React.Component {
       map: null,
       error: '',
       weather: '',
-      movies: ''
+      movieObj: ''
     }
   }
   saveCity = (value) => {
-    console.log(value)
     this.setState({ city: value })
   }
 
@@ -55,8 +54,7 @@ export default class App extends React.Component {
     this.setState({ weather: '' })
     try {
       const forecastResults = await axios.get(`${URL}/?lat=${params.lat}&lon=${params.lon}&searchQuery=${params.searchQuery}`);
-      console.log(forecastResults)
-      this.setState({ weather: forecastResults.data }, () => this.state)
+      this.setState({ weather: forecastResults.data }, () => this.getMovies())
     } catch (e) {
       console.log('weather error', e)
       e.message === "Network Error" ? this.setState({ error: 502, weather: 502 }) : this.setState({ error: e.message })
@@ -68,11 +66,10 @@ export default class App extends React.Component {
     const params = {
       'searchQuery': this.state.city
     }
-    this.setState({ movies: '' })
+    this.setState({ movieObj: '' })
     try {
       const movieResults = await axios.get(`${URL}/?searchQuery=${params.searchQuery}`)
-      console.log(movieResults);
-      this.setState({ movies: movieResults }, () => console.log(this.state.movies))
+      this.setState({ movieObj: movieResults }, () => console.log(this.state.movieObj))
     } catch (e) {
       console.log('error in movies', e)
     }
@@ -111,7 +108,7 @@ export default class App extends React.Component {
               map={this.state.map}
               weather={this.state.weather}
               error={this.state.error}
-              movies={this.state.movies}
+              movieObj={this.state.movieObj}
             />
           </>
         }
