@@ -6,12 +6,14 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Weather from "./Weather"
 import Movie from "./Movie"
-import Accordion from 'react-bootstrap/Accordion';
+import Restaurants from './Restaurants';
 
 
 
 export default class Results extends React.Component {
   render() {
+    console.log(this.props)
+
     return (
       <Container fluid className="mt-5">
         <Row>
@@ -36,6 +38,11 @@ export default class Results extends React.Component {
               <Card style={{ width: '25rem' }} className="mt-5 m-auto mb-5 align-self-center">
                 <Movie
                   movieObj={this.props.movieObj}
+                />
+              </Card>
+              <Card className="mt-5">
+                <Restaurants
+                  restaurants={this.props.restaurants}
                 />
               </Card>
           </Col>
